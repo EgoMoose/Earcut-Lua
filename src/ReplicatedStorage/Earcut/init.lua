@@ -121,7 +121,14 @@ function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass)
 		prev = ear.prev
 		next = ear.next
 
-		if invSize and isEarHashed(ear, minX, minY, invSize) or isEar(ear) then
+		local test = nil
+		if invSize then
+			test = isEarHashed(ear, minX, minY, invSize)
+		else
+			test = isEar(ear)
+		end
+		
+		if test then
 			-- cut off the triangle
 			ZeroArray.push(triangles, prev.i / dim)
 			ZeroArray.push(triangles, ear.i / dim)
@@ -465,7 +472,7 @@ function sortLinked(list)
 		tail.nextZ = nil
 		inSize = inSize * 2
 
-	until numMerges < 1
+	until numMerges <= 1
 
 	return list
 end
@@ -727,12 +734,14 @@ end
 
 function flatten(data)
 	local dim = #data[1][1]
-	local result = {vertices = {}, holes = {}, dimensions = dim}
+	local result = {vertices = {}, holes = {}, dimensions = dim, max = {}, min = {}}
 	local holeIndex = 1
 
 	for i = 1, #data do
 		for j = 1, #data[i] do
 			for d = 1, dim do
+				result.max[d] = math.max(result.max[d] or -math.huge, data[i][j][d])
+				result.min[d] = math.min(result.min[d] or math.huge, data[i][j][d])
 				table.insert(result.vertices, data[i][j][d])
 			end
 		end
