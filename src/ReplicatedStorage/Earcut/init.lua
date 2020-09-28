@@ -80,7 +80,7 @@ end
 -- eliminate colinear or duplicate points
 function filterPoints(start, finish)
 	if not start then return start end
-	if not finish then return finish end
+	if not finish then finish = start end
 
 	local p = start
 	local again
@@ -97,7 +97,7 @@ function filterPoints(start, finish)
 		else
 			p = p.next
 		end
-	until not (again or p ~= finish)
+	until not again or p == finish
 
 	return finish
 end
@@ -253,7 +253,7 @@ function cureLocalIntersections(start, triangles, dim)
 			p = b
 			start = b
 		end
-	until not (p ~= start)
+	until p == start
 
 	return filterPoints(p)
 end
@@ -281,7 +281,7 @@ function splitEarcut(start, triangles, dim, minX, minY, invSize)
 			b = b.next
 		end
 		a = a.next
-	until not (a ~= start)
+	until a == start
 end
 
 -- link every hole into the outer loop, producing a single-ring polygon without holes
@@ -354,7 +354,7 @@ function findHoleBridge(hole, outerNode)
 			end
 		end
 		p = p.next
-	until not (p ~= outerNode)
+	until p == outerNode
 
 	if not m then return nil end
 
@@ -383,7 +383,7 @@ function findHoleBridge(hole, outerNode)
 		end
 
 		p = p.next
-	until not (p ~= stop)
+	until p == stop
 
 	return m
 end
@@ -403,7 +403,7 @@ function indexCurve(start, minX, minY, invSize)
 		p.prevZ = p.prev
 		p.nextZ = p.next
 		p = p.next
-	until not (p ~= start)
+	until p == start
 
 	p.prevZ.nextZ = nil
 	p.prevZ = nil
@@ -464,7 +464,8 @@ function sortLinked(list)
 
 		tail.nextZ = nil
 		inSize = inSize * 2
-	until not (numMerges > 1)
+
+	until numMerges < 1
 
 	return list
 end
@@ -500,7 +501,7 @@ function getLeftmost(start)
 			leftmost = p
 		end
 		p = p.next
-	until not (p ~= start)
+	until p == start
 
 	return leftmost
 end
@@ -564,7 +565,7 @@ function intersectsPolygon(a, b)
 			return true
 		end
 		p = p.next
-	until not (p ~= a)
+	until p == a
 
 	return false
 end
@@ -589,7 +590,7 @@ function middleInside(a, b)
 			inside = not inside
 		end
 		p = p.next
-	until not (p ~= a)
+	until p == a
 
 	return inside
 end
