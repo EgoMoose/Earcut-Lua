@@ -1,10 +1,5 @@
 local ZeroArray = require(script:WaitForChild("ZeroArray"))
 
-local function iff(condition, a, b)
-	if condition then return a end
-	return b
-end
-
 function earcut(data, holeIndices, dim)
 	data = ZeroArray.new(data)
 	holeIndices = ZeroArray.new(holeIndices)
@@ -383,7 +378,7 @@ function findHoleBridge(hole, outerNode)
 
 			if locallyInside(p, hole) and (tan < tanMin or (tan == tanMin and (p.x > m.x or (p.x == m.x and sectorContainsSector(m, p))))) then
 				m = p
-				tanMin = min
+				tanMin = tan
 			end
 		end
 
@@ -657,15 +652,15 @@ function Node(i, x, y)
 	this.y = y
 
 	-- previous and next vertex nodes in a polygon ring
-	this.prev = null
-	this.next = null
+	this.prev = nil
+	this.next = nil
 
 	-- z-order curve value
-	this.z = null
+	this.z = nil
 
 	-- previous and next nodes in z-order
-	this.prevZ = null
-	this.nextZ = null
+	this.prevZ = nil
+	this.nextZ = nil
 
 	-- indicates whether this is a steiner point
 	this.steiner = false
@@ -678,8 +673,9 @@ end
 function deviation(data, holeIndices, dim, triangles)
 	data = ZeroArray.new(data)
 	holeIndices = ZeroArray.new(holeIndices)
+	triangles = ZeroArray.new(triangles)
 
-	local hasHoles = holeIndices and #holeIndices
+	local hasHoles = (holeIndices and #holeIndices > 0)
 	local outerLen = hasHoles and holeIndices[0] * dim or #data
 
 	local polygonArea = math.abs(signedArea(data, 0, outerLen, dim))
@@ -747,8 +743,15 @@ function flatten(data)
 	return result
 end
 
-return {
-	Earcut = earcut,
+-- module return
+
+local lib = {
 	Deviation = deviation,
 	Flatten = flatten,
 }
+
+return setmetatable(lib, {
+	__call = function(t, ...)
+		return earcut(...)
+	end
+})
