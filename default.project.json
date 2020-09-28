@@ -1,0 +1,29 @@
+{
+	"name": "Earcut-Lua",
+	"tree": {
+		"$className": "DataModel",
+		"HttpService": {
+			"$className": "HttpService",
+			"$properties": {
+			"HttpEnabled": true
+			}
+		},
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"$path": "src/ReplicatedStorage"
+		},
+		"StarterPlayer": {
+			"$className": "StarterPlayer",
+			"StarterPlayerScripts": {
+			"$className": "StarterPlayerScripts",
+			"$path": "src/StarterPlayerScripts"
+			}
+		},
+		"SoundService": {
+			"$className": "SoundService",
+			"$properties": {
+			"RespectFilteringEnabled": true
+			}
+		}
+	}
+}
