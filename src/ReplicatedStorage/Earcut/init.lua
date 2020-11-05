@@ -260,6 +260,7 @@ function cureLocalIntersections(start, triangles, dim)
 			p = b
 			start = b
 		end
+		p = p.next
 	until p == start
 
 	return filterPoints(p)

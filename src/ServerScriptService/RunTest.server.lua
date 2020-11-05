@@ -1,1 +1,1 @@
--- require(game.ReplicatedStorage.TestServer)
+require(game.ReplicatedStorage.TestServer)
